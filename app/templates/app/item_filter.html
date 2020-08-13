@@ -37,15 +37,31 @@
                 {% include "./_pagination.html" %}
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <ul class="list-group">
+
+<table class="table" id="table_1">
+    <thead>
+        <tr>
+            <th>機種名</th>
+            <th>収支</th>
+            <th>作成時間</th>
+        </tr>
+    </thead>
                     {% for item in item_list %}
-                        <li class="list-group-item">
-                            {# item_detail_contents.html を参考に必要な項目を追加してください #}
+    <tbody>
+        <tr>
+            <td><p>{{ item.sample_1|default_if_none:"未入力" }}</p></td>
+            <td><p>{{ item.sample_2|default_if_none:"未入力" }}</p></td>
+            <td><p>{{ item.created_at|date:"Y/m/d G:i:s" }}</p></td>
+            <td><a class="btn btn-outline-dark " href="{% url 'delete' item.pk %}">削除</a></td>
+        </tr>
+
+    </tbody>
+
+
+                            <!--
                             <div class="row">
                                 <div class="col-5 col-sm-3">
-                                    <p>1_文字列</p>
+                                    <p>機種名</p>
                                 </div>
                                 <div class="col-7 col-sm-9">
                                     <p>{{ item.sample_1|default_if_none:"未入力" }}</p>
@@ -53,26 +69,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-5 col-sm-3">
-                                    <p>2_メモ</p>
+                                    <p>収支</p>
                                 </div>
                                 <div class="col-7 col-sm-9">
                                     <p>{{ item.sample_2|default_if_none:"未入力" }}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-5 col-sm-3">
-                                    <p>3_整数</p>
-                                </div>
-                                <div class="col-7 col-sm-9">
-                                    <p>{{ item.sample_3|default_if_none:"未入力" }}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-5 col-sm-3">
-                                    <p>作成者</p>
-                                </div>
-                                <div class="col-7 col-sm-9">
-                                    <p>{{ item.created_by.get_full_name }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -92,15 +92,41 @@
                                     </div>
                                 </div>
                             </div>
+                            -->
                         </li>
                     {% empty %}
                         <li class="list-group-item">
                             対象のデータがありません
                         </li>
                     {% endfor %}
-                </ul>
-            </div>
-        </div>
+</table>
+<input type="button" value="合計" onclick="calc_total();"/>
+
+<body onload = "calc_total();"></body>
+
+
+    <script language="javascript" type="text/javascript">
+function calc_total(){
+  var tblTbody = document.getElementById('table_1');
+  var goukei = 0;
+    for (var i=1, rowLen=tblTbody.rows.length; i<rowLen; i++) {
+        //i行目のj列目のセルを取得
+        var cells = tblTbody.rows[i].cells[1];
+        goukei += parseInt(cells.innerText);
+        //取得した値をテキストエリアへ表示
+    }
+        document.getElementById("goukei").innerText = goukei;
+}
+    </script>
+
+
+                            <div class="row">
+                                <div class="col-7 col-sm-9">
+                                    <div id="goukei"></div>
+                                </div>
+                            </div>
+
+
         <div class="row mt-3">
             <div class="col-10 mx-auto">
                 {% include "./_pagination.html" %}
@@ -116,3 +142,4 @@
         </div>
     </div>
 {% endblock %}
+
